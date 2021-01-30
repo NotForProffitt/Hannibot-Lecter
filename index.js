@@ -28,7 +28,6 @@ var cannibalismCounter = 0
 //not technically used
 let lastMentionedDate = new Date()
 const prefix = '!'
-var reactEmoji = client.emojis.find(emoji => emoji.name === "fork_and_knife") 
 
 //string array for !lecter command
 var quotes = ["",
@@ -66,7 +65,6 @@ bot.on('message', async (msg) => {
     for(i = 0; i < keywords.length; i++) {
         if(msg.content.toLowerCase().includes(keywords[i]) && !msg.author.bot) {
             cannibalismCounter += 1
-            msg.react(reactEmoji)
             fs.writeFile('cannibalismCounter.txt', cannibalismCounter, err => {
                 if (err) {
                     console.error(err)
@@ -94,7 +92,7 @@ bot.on('message', async (msg) => {
         return
     }
 
-    if(msg.content.toLowerCase.startsWith("!help")) {
+    if(msg.content.toLowerCase().startsWith("!help")) {
         msg.reply("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\`\`\`")
     }
 
