@@ -64,23 +64,32 @@ function increment() {
 bot.on('message', async (msg) => {
     for(i = 0; i < keywords.length; i++) {
         if(msg.content.toLowerCase().includes(keywords[i]) && !msg.author.bot) {
+            
+            //updating counter and reacting to msg
             cannibalismCounter += 1
+            msg.react('🍴')
+            
+            //writing new counter value to storage file
             fs.writeFile('cannibalismCounter.txt', cannibalismCounter, err => {
                 if (err) {
                     console.error(err)
                     return
                 }
+                //logging the change
                 console.log('incremented cannibalismCounter count successfully')
             })
 
+            //resetting the daysSince value and writing to storage file
             daysSince = 0
             fs.writeFile('daysSince.txt', daysSince, err => {
                 if (err) {
                     console.error(err)
                     return
                 }
+                //logging the change
                 console.log('reset DaySince count successfully')
             })
+            //not actually used
             lastMentionedDate = Date()
             console.log(cannibalismCounter)
             return
