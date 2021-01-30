@@ -29,7 +29,7 @@ var cannibalismCounter = 0
 let lastMentionedDate = new Date()
 const prefix = '!'
 
-//string array for !lector command
+//string array for !lecter command
 var quotes = ["",
     "When the fox hears the rabbit scream, he comes a-runnin', but not to help!",
     "I never feel guilty eating anything.",
@@ -37,7 +37,7 @@ var quotes = ["",
     "Without death, we'd be at a loss. It's the prospect of death that drives us to greatness.",
     "I do wish we could chat longer, but I'm having an old friend for dinner."]
 
-var interval = setInterval(increment, 1000)
+var interval = setInterval(increment, 86400000)
 
 function increment() {
     daysSince += 1
@@ -79,19 +79,15 @@ bot.on('message', async (msg) => {
         return
     }
 
-    if(msg.content.toLowerCase.startsWith("!help")) {
-        msg.reply("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\`\`\`")
-    }
-
     //responds with the amount of days since cannibalism was last mentioned
-    if(msg.content.toLowerCase().startsWith("!counter")) {
+    if (msg.content.toLowerCase().startsWith("!counter")) {
         console.log('counter call')
         msg.reply(daysSince + " days since cannibalism was last mentioned in this server.")
 
     }
 
     //replies with the amount of times the word cannibalism has been said in the server
-    if(msg.content.toLowerCase().startsWith("!wordcount")) {
+    if (msg.content.toLowerCase().startsWith("!wordcount")) {
         console.log('word count')
         fs.readFile('cannibalismCounter.txt', 'utf8', (err, data) => {
             if (err) {
@@ -106,8 +102,8 @@ bot.on('message', async (msg) => {
     }
 
     //replies with a quote from Hannibal Lector chosen at random from an array of responses
-    if(msg.content.toLowerCase().startsWith("!lector")) {
-        console.log('lector quote')
+    if (msg.content.toLowerCase().startsWith("!lecter")) {
+        console.log('lecter quote')
         msg.reply(quotes[Math.floor(Math.random() * 4) + 1])
     }
 
