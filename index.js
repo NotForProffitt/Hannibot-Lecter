@@ -41,11 +41,19 @@ var quotes = ["",
 var keywords = ["cannibalism",
                 "cannibal",
                 "eat people",
+		"eating people",
+		"eat him",
+		"eat her",
+		"eat them",
+		"eat you",
                 "eat flesh",
+		"eat me",
                 "soylent green",
                 "yummy flesh",
                 "eat the rich",
-                "vore"
+                "vore",
+		"namira",
+		"canibalismo"
 
 ]
 
@@ -64,32 +72,23 @@ function increment() {
 bot.on('message', async (msg) => {
     for(i = 0; i < keywords.length; i++) {
         if(msg.content.toLowerCase().includes(keywords[i]) && !msg.author.bot) {
-            
-            //updating counter and reacting to msg
             cannibalismCounter += 1
-            msg.react('🍴')
-            
-            //writing new counter value to storage file
             fs.writeFile('cannibalismCounter.txt', cannibalismCounter, err => {
                 if (err) {
                     console.error(err)
                     return
                 }
-                //logging the change
                 console.log('incremented cannibalismCounter count successfully')
             })
 
-            //resetting the daysSince value and writing to storage file
             daysSince = 0
             fs.writeFile('daysSince.txt', daysSince, err => {
                 if (err) {
                     console.error(err)
                     return
                 }
-                //logging the change
                 console.log('reset DaySince count successfully')
             })
-            //not actually used
             lastMentionedDate = Date()
             console.log(cannibalismCounter)
             return
@@ -102,7 +101,7 @@ bot.on('message', async (msg) => {
     }
 
     if(msg.content.toLowerCase().startsWith("!help")) {
-        msg.reply("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\`\`\`")
+        msg.reply("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\n\nContact ProbablyNotAFurry#6782 for issues, questions, or comments.\`\`\`")
     }
 
     //responds with the amount of days since cannibalism was last mentioned
@@ -122,10 +121,16 @@ bot.on('message', async (msg) => {
             }
             console.log(data)
             cannibalismCounter = Number(data)
+	    if (cannibalismCounter == 1) {
+	    	msg.reply("Cannibalism has been mentioned 1 time in this server. Delicious!")
+	    }
+	
+	    else {
+	    msg.reply("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!")
+	    }
             console.log('read cannibalismCounter file successfully')
         })
-        if(cannibalismCounter = 1) msg.reply("Cannibalism has been mentioned " + cannibalismCounter + " time in this server. Delicious!")
-        else msg.reply("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!")
+    
     }
 
     //replies with a quote from Hannibal Lector chosen at random from an array of responses
@@ -136,3 +141,4 @@ bot.on('message', async (msg) => {
 
 }
 )
+
