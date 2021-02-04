@@ -107,7 +107,7 @@ bot.on('message', async (msg) => {
 
     //because every good bot has one
     if(msg.content.toLowerCase().startsWith("!help")) {
-        msg.reply("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\n\nContact ProbablyNotAFurry#6782 for issues, questions, or comments.\`\`\`")
+        msg.reply("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\n\ncontribute at: https://github.com/NotForProffitt/Hannibot-Lecter\n\nContact ProbablyNotAFurry#6782 for issues, questions, or comments.\`\`\`")
     }
 
     //responds with the amount of days since cannibalism was last mentioned
@@ -129,12 +129,11 @@ bot.on('message', async (msg) => {
             cannibalismCounter = Number(data)
 
 	    //a whole if/else block because bendy is a grammer stickler >:(
-	    if (cannibalismCounter == 1) {
-	    	msg.reply("Cannibalism has been mentioned 1 time in this server. Delicious!")
-	    }
-	    else {
-	    msg.reply("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!")
-	    }
+	    //if (cannibalismCounter == 1) msg.reply("Cannibalism has been mentioned 1 time in this server. Delicious!")
+	    //else msg.reply("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!")
+
+	    cannibalismCounter == 1 ? msg.reply("Cannibalism has been mentioned 1 time in this server. Delicious!") : msg.reply("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!");
+
             console.log('read cannibalismCounter file successfully')
         })
     
