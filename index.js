@@ -1,6 +1,5 @@
 const Discord = require("discord.js");
 var config = require('./config.js');
-
 const bot = new Discord.Client();
 const fs = require('fs')
 
@@ -8,25 +7,15 @@ bot.on('ready', () => {
     console.log('bot is ready')
 })
 
-//bot.login(token)
 bot.login(require('./config'))
 
-var daysSince = 0
-
-//reads in the value stored in the daysSince file to the var
-fs.readFile('daysSince.txt', 'utf8', (err, data) => {
-    if(err) {
-        console.error(err)
-        return
-    }
-    console.log(data)
-    daysSince = Number(data)
-    console.log('read daysSince file successfully')
-})
-
-var cannibalismCounter = 0
-
+//used to denote commands
 const prefix = '!'
+
+//usage data
+var daysSince = 0
+var cannibalismCounter = 0
+var lastReference = "Huh, it's never been brought up!"
 
 //string array for !lecter command
 var quotes = [
@@ -57,6 +46,17 @@ var keywords = [
 	"canibalismo"
 ]
 
+//reads in the value stored in the daysSince file to the var
+fs.readFile('daysSince.txt', 'utf8', (err, data) => {
+    if(err) {
+        console.error(err)
+        return
+    }
+    console.log('days since: '+data)
+    daysSince = Number(data)
+    console.log('read daysSince file successfully')
+})
+
 //counter for incrementing daysSince var every 24 hours
 var interval = setInterval(increment, 86400000)
 function increment() {
@@ -77,6 +77,7 @@ bot.on('message', async (msg) => {
         if(msg.content.toLowerCase().includes(keywords[i]) && !msg.author.bot && !(msg.guild === null)) {
             cannibalismCounter++
 	    daysSince = 0
+	    lastReference = msg.content.toString()
 
             fs.writeFile('cannibalismCounter.txt', cannibalismCounter, err => {
                 if (err) {
@@ -107,7 +108,7 @@ bot.on('message', async (msg) => {
 
     //because every good bot has one
     if(msg.content.toLowerCase().startsWith("!help")) {
-        msg.reply("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\n\ncontribute at: https://github.com/NotForProffitt/Hannibot-Lecter\n\nContact ProbablyNotAFurry#6782 for issues, questions, or comments.\`\`\`")
+        msg.reply("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\n!history: relays the tale of how Hannibot-Lecter came to be.\n!lasttime: shows the last message the contained reference to cannibalism.\n\ncontribute at: https://github.com/NotForProffitt/Hannibot-Lecter\n\nContact ProbablyNotAFurry#6782 for issues, questions, or comments.\`\`\`")
     }
 
     //responds with the amount of days since cannibalism was last mentioned
@@ -125,15 +126,11 @@ bot.on('message', async (msg) => {
                 console.error(err)
                 return
             }
-            console.log(data)
+            console.log('cannibalismCounter: '+data)
             cannibalismCounter = Number(data)
 
-	    //a whole if/else block because bendy is a grammer stickler >:(
-	    //if (cannibalismCounter == 1) msg.reply("Cannibalism has been mentioned 1 time in this server. Delicious!")
-	    //else msg.reply("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!")
-
+	    //nasty ternary operation  because bendy is a grammer stickler >:(
 	    cannibalismCounter == 1 ? msg.reply("Cannibalism has been mentioned 1 time in this server. Delicious!") : msg.reply("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!");
-
             console.log('read cannibalismCounter file successfully')
         })
     
@@ -144,11 +141,16 @@ bot.on('message', async (msg) => {
         console.log('lecter quote')
         msg.reply(quotes[Math.floor(Math.random() * 4) + 1])
     }
-	
+
+    //regales us with the grand tale of how Hannibot lecer came to be
     if (msg.content.toLowerCase().startsWith("!history")) {
         console.log("history")
-        msg.reply("> History of Hannibot-Lecter:\n> 12/4/20: the first mention (conceptually)\n\`\`\`Charleston Boole: I will eat the server\`\`\`\n> 1/21/30: the first counter\n\`\`\`Adrienne: Days since cannibalism: 0\`\`\`\n> 1/27/21: bot suggested\n\`\`\`Jesus: someone make a cannibalism counter bot\`\`\`\n> 1/30/21: bot created\n\`\`\`Server notification: Glad you're here, Hannibot Lecter.\`\`\`")
+        msg.reply("\n> History of Hannibot-Lecter:\n> 12/4/20: the first mention (conceptually)\n\`\`\`Charleston Boole: I will eat the server\`\`\`\n> 1/21/30: the first counter\n\`\`\`Adrienne: Days since cannibalism: 0\`\`\`\n> 1/27/21: bot suggested\n\`\`\`Jesus: someone make a cannibalism counter bot\`\`\`\n> 1/30/21: bot created\n\`\`\`Server notification: Glad you're here, Hannibot Lecter.\`\`\`")
     }
+
+    if(msg.content.toLowerCase().startsWith("!lasttime")) {
+	msg.reply("\""+lastReference+"\"")
 	
+    }
 }
 )
