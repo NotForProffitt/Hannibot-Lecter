@@ -61,7 +61,7 @@ var keywords = ["cannibalism",
 
 var interval = setInterval(increment, 86400000)
 function increment() {
-    daysSince += 1
+    daysSince++
     fs.writeFile('daysSince.txt', daysSince, err => {
         if(err) {
             console.error(err)
@@ -73,8 +73,8 @@ function increment() {
 
 bot.on('message', async (msg) => {
     for(i = 0; i < keywords.length; i++) {
-        if(msg.content.toLowerCase().includes(keywords[i]) && !msg.author.bot) {
-            cannibalismCounter += 1
+        if(msg.content.toLowerCase().includes(keywords[i]) && !msg.author.bot && !(msg.guild === null)) {
+            cannibalismCounter++
             fs.writeFile('cannibalismCounter.txt', cannibalismCounter, err => {
                 if (err) {
                     console.error(err)
