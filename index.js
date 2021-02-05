@@ -17,6 +17,7 @@ var daysSince = 0
 var cannibalismCounter = 0
 var lastReference = "Huh, it's never been brought up!"
 
+//TODO something better than just string arrs for this
 //string array for !lecter command
 var quotes = [
 	"",
@@ -27,6 +28,7 @@ var quotes = [
     	"I do wish we could chat longer, but I'm having an old friend for dinner."
 ]
 
+//TODO as above, so below
 var keywords = [
 	"cannibalism",
         "cannibal",
@@ -147,7 +149,8 @@ bot.on('message', async (msg) => {
         console.log("history")
         msg.reply("\n> History of Hannibot-Lecter:\n> 12/4/20: the first mention (conceptually)\n\`\`\`Charleston Boole: I will eat the server\`\`\`\n> 1/21/30: the first counter\n\`\`\`Adrienne: Days since cannibalism: 0\`\`\`\n> 1/27/21: bot suggested\n\`\`\`Jesus: someone make a cannibalism counter bot\`\`\`\n> 1/30/21: bot created\n\`\`\`Server notification: Glad you're here, Hannibot Lecter.\`\`\`")
     }
-
+    
+    //TODO change to read/write lastReference to a file to persist between bot restarts
     if(msg.content.toLowerCase().startsWith("!lasttime")) {
 	msg.reply("\""+lastReference+"\"")
 	
