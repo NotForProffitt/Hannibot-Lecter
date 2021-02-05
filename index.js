@@ -49,7 +49,7 @@ var keywords = [
 	"friends are food"
 ]
 
-//reads in the value stored in the daysSince file to the var
+//reads in the value stored in the daysSince and cannibalismCounter file to the var
 fs.readFile('daysSince.txt', 'utf8', (err, data) => {
     if(err) {
         console.error(err)
@@ -59,6 +59,18 @@ fs.readFile('daysSince.txt', 'utf8', (err, data) => {
     daysSince = Number(data)
     console.log('read daysSince file successfully')
 })
+
+fs.readFile('cannibalismCounter.txt', 'utf8', (err, data) => {
+	if(err) {
+		console.error(err)
+		return
+	}
+	console.log('cannibalism Counter: '+data)
+	cannibalismCounter = Number(data)
+	console.log('read cannibalismCounter file successfully')
+})
+
+
 
 //counter for incrementing daysSince var every 24 hours
 var interval = setInterval(increment, 86400000)
@@ -73,8 +85,8 @@ function increment() {
     })
 }
 
+//on message, perform various checks
 bot.on('message', async (msg) => {
-	
 	
     //this is here because I want it be, no other reason
     if(!msg.content.startsWith(prefix)) {
