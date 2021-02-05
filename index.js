@@ -46,6 +46,7 @@ var keywords = [
         "vore",
 	"namira",
 	"canibalismo"
+	"friends are food"
 ]
 
 //reads in the value stored in the daysSince file to the var
