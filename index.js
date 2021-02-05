@@ -45,7 +45,7 @@ var keywords = [
         "eat the rich",
         "vore",
 	"namira",
-	"canibalismo"
+	"canibalismo",
 	"friends are food"
 ]
 
