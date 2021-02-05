@@ -144,7 +144,7 @@ bot.on('message', async (msg) => {
         msg.reply(quotes[Math.floor(Math.random() * 4) + 1])
     }
 
-    //regales us with the grand tale of how Hannibot lecer came to be
+    //regales us with the grand tale of how Hannibot lecter came to be
     if (msg.content.toLowerCase().startsWith("!history")) {
         console.log("history")
         msg.reply("\n> History of Hannibot-Lecter:\n> 12/4/20: the first mention (conceptually)\n\`\`\`Charleston Boole: I will eat the server\`\`\`\n> 1/21/30: the first counter\n\`\`\`Adrienne: Days since cannibalism: 0\`\`\`\n> 1/27/21: bot suggested\n\`\`\`Jesus: someone make a cannibalism counter bot\`\`\`\n> 1/30/21: bot created\n\`\`\`Server notification: Glad you're here, Hannibot Lecter.\`\`\`")
