@@ -30,6 +30,8 @@ var quotes = [
         "I came here to eat ass and shit my pants, and I'm all out of pants"
 ]
 
+// console.log("user pattern: " + Discord.MessageMentions.USERS_PATTERN);
+
 //TODO as above, so below
 var keywords = [
 	/cannibal(ismo?)?/i,
@@ -39,7 +41,7 @@ var keywords = [
         /vore/i,
 	/namira/i,
     /(friends|people|humans) are food/i,
-    new RegExp('eat ' + Discord.MessageMentions.USERS_PATTERN, 'i')
+    /eat <@!?(\d{17,19})>/ig // <@!?(\d{17,19})> is the regex for a user mention; idk how to elegantly combine regex literals, so I did console.log(Discord.MessageMentions.USERS_PATTERN) and copy-pasted it here
 ]
 
 //reads in the value stored in the daysSince and cannibalismCounter file to the var
@@ -87,11 +89,12 @@ bot.on('message', async (msg) => {
 
 		//if msg contains reference, reset daysSince and increment cannibalismCounter
 		if(keywords[i].test(msg.content) && !msg.author.bot && !(msg.guild === null)) {
+            console.log("hello");
 		    cannibalismCounter++
 		    daysSince = 0
-		    lastReference = msg.content.toString()
+		    lastReference = msg.content
 
-		    fs.writeFile('cannibalismCounter.txt', cannibalismCounter, err => {
+		    fs.writeFile('cannibalismCounter.txt', cannibalismCounter.toString(), err => {
 			if (err) {
 			    console.error(err)
 			    return
@@ -99,7 +102,7 @@ bot.on('message', async (msg) => {
 			console.log('incremented cannibalismCounter count successfully')
 		    })
 
-		    fs.writeFile('daysSince.txt', daysSince, err => {
+		    fs.writeFile('daysSince.txt', daysSince.toString(), err => {
 			if (err) {
 			    console.error(err)
 			    return
