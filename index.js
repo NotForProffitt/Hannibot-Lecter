@@ -25,28 +25,23 @@ var quotes = [
     	"I never feel guilty eating anything.",
     	"Discourtesy is unspeakably ugly to me.",
     	"Without death, we'd be at a loss. It's the prospect of death that drives us to greatness.",
-    	"I do wish we could chat longer, but I'm having an old friend for dinner."
+        "I do wish we could chat longer, but I'm having an old friend for dinner.",
+        "Well, whaddya know? A human sandwich. (Looks inside) Wouldn't you know, it needs some mustard.",
+        "I came here to eat ass and shit my pants, and I'm all out of pants"
 ]
+
+// console.log("user pattern: " + Discord.MessageMentions.USERS_PATTERN);
 
 //TODO as above, so below
 var keywords = [
-	"cannibalism",
-        "cannibal",
-        "eat people",
-	"eating people",
-	"eat him",
-	"eat her",
-	"eat them",
-	"eat you",
-	"eat flesh",
-	"eat me",
-        "soylent green",
-        "yummy flesh",
-        "eat the rich",
-        "vore",
-	"namira",
-	"canibalismo",
-	"friends are food"
+	/cannibal(ismo?)?/i,
+        /eat(ing)? (people|him|her|them|you|flesh|me|the rich)/i,
+        /soylent green/i,
+        /yummy flesh/i,
+        /vore/i,
+	/namira/i,
+    /(friends|people|humans) are food/i,
+    /eat <@!?(\d{17,19})>/ig // <@!?(\d{17,19})> is the regex for a user mention; idk how to elegantly combine regex literals, so I did console.log(Discord.MessageMentions.USERS_PATTERN) and copy-pasted it here
 ]
 
 //reads in the value stored in the daysSince and cannibalismCounter file to the var
@@ -93,12 +88,13 @@ bot.on('message', async (msg) => {
 	    for(i = 0; i < keywords.length; i++) {
 
 		//if msg contains reference, reset daysSince and increment cannibalismCounter
-		if(msg.content.toLowerCase().includes(keywords[i]) && !msg.author.bot && !(msg.guild === null)) {
+		if(keywords[i].test(msg.content) && !msg.author.bot && !(msg.guild === null)) {
+            console.log("hello");
 		    cannibalismCounter++
 		    daysSince = 0
-		    lastReference = msg.content.toString()
+		    lastReference = msg.content
 
-		    fs.writeFile('cannibalismCounter.txt', cannibalismCounter, err => {
+		    fs.writeFile('cannibalismCounter.txt', cannibalismCounter.toString(), err => {
 			if (err) {
 			    console.error(err)
 			    return
@@ -106,7 +102,7 @@ bot.on('message', async (msg) => {
 			console.log('incremented cannibalismCounter count successfully')
 		    })
 
-		    fs.writeFile('daysSince.txt', daysSince, err => {
+		    fs.writeFile('daysSince.txt', daysSince.toString(), err => {
 			if (err) {
 			    console.error(err)
 			    return
