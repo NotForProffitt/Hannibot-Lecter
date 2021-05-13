@@ -174,12 +174,13 @@ bot.on('message', async (msg) => {
 	//msg.channel.send("\""+lastReference+"\"")
 
     fs.readFile("lastTime.txt", (err, data) => {
-        lastReference = data
-        if (file.length != 0){
-            msg.channel.send(lastReference)
-        } else {
-            msg.channel.send("Huh, it's never been brought up!")
+        if (err) {
+            console.error(err)
+            return
         }
+        
+        lastReference = data
+        msg.channel.send(lastReference)
     })
 
 	return
