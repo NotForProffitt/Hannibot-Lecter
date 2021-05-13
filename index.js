@@ -27,7 +27,6 @@ var quotes = [
     	"Without death, we'd be at a loss. It's the prospect of death that drives us to greatness.",
         "I do wish we could chat longer, but I'm having an old friend for dinner.",
         "Well, whaddya know? A human sandwich. (Looks inside) Wouldn't you know, it needs some mustard.",
-        "I came here to eat ass and shit my pants, and I'm all out of pants"
 ]
 
 // console.log("user pattern: " + Discord.MessageMentions.USERS_PATTERN);
@@ -93,6 +92,13 @@ bot.on('message', async (msg) => {
 		    cannibalismCounter++
 		    daysSince = 0
 		    lastReference = msg.content
+            fs.writeFile('lastTime.txt', lastReference.toString(), err => {
+            if (err) {
+                console.error(err)
+                return
+            }
+            console.log('lastTime logged successfully')
+            })
 
 		    fs.writeFile('cannibalismCounter.txt', cannibalismCounter.toString(), err => {
 			if (err) {
@@ -119,18 +125,18 @@ bot.on('message', async (msg) => {
 
     //because every good bot has one
     if(msg.content.toLowerCase().startsWith("!help")) {
-        msg.reply("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\n!history: relays the tale of how Hannibot-Lecter came to be.\n!lasttime: shows the last message the contained reference to cannibalism.\n\ncontribute at: https://github.com/NotForProffitt/Hannibot-Lecter\n\nContact ProbablyNotAFurry#6782 for issues, questions, or comments.\`\`\`")
+        msg.channel.send("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\n!history: relays the tale of how Hannibot-Lecter came to be.\n!lasttime: shows the last message the contained reference to cannibalism.\n\ncontribute at: https://github.com/NotForProffitt/Hannibot-Lecter\n\nContact ProbablyNotAFurry#6782 for issues, questions, or comments.\`\`\`")
     	return
     }
 
     //responds with the amount of days since cannibalism was last mentioned
     if(msg.content.toLowerCase().startsWith("!counter")) {
         console.log('counter call')
-        msg.reply(daysSince + " days since cannibalism was last mentioned in this server.")
+        msg.channel.send(daysSince + " days since cannibalism was last mentioned in this server.")
 	return
     }
 
-    //replies with the amount of times the word cannibalism has been said in the server
+    //sends the amount of times the word cannibalism has been said in the server
     if(msg.content.toLowerCase().startsWith("!wordcount")) {
         console.log('word count')
         fs.readFile('cannibalismCounter.txt', 'utf8', (err, data) => {
@@ -142,32 +148,42 @@ bot.on('message', async (msg) => {
             cannibalismCounter = Number(data)
 
 	    //nasty ternary operation  because bendy is a grammer stickler >:(
-	    cannibalismCounter == 1 ? msg.reply("Cannibalism has been mentioned 1 time in this server. Delicious!") : msg.reply("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!");
+	    cannibalismCounter == 1 ? msg.channel.send("Cannibalism has been mentioned 1 time in this server. Delicious!") : msg.channel.send("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!");
             console.log('read cannibalismCounter file successfully')
         })
     	return
     }
 
-    //replies with a quote from Hannibal Lector chosen at random from an array of responses
+    //sends a quote from Hannibal Lector chosen at random from an array of responses
     if (msg.content.toLowerCase().startsWith("!lecter")) {
         console.log('lecter quote')
-        msg.reply(quotes[Math.floor(Math.random() * 4) + 1])
+        msg.channel.send(quotes[Math.floor(Math.random() * 4) + 1])
 	return
     }
 
     //regales us with the grand tale of how Hannibot lecter came to be
     if (msg.content.toLowerCase().startsWith("!history")) {
         console.log("history")
-        msg.reply("\n> History of Hannibot-Lecter:\n> 12/4/20: the first mention (conceptually)\n\`\`\`Charleston Boole: I will eat the server\`\`\`\n> 1/21/30: the first counter\n\`\`\`Adrienne: Days since cannibalism: 0\`\`\`\n> 1/27/21: bot suggested\n\`\`\`Jesus: someone make a cannibalism counter bot\`\`\`\n> 1/30/21: bot created\n\`\`\`Server notification: Glad you're here, Hannibot Lecter.\`\`\`")
+        msg.channel.send("\n> History of Hannibot-Lecter:\n> 12/4/20: the first mention (conceptually)\n\`\`\`Charleston Boole: I will eat the server\`\`\`\n> 1/21/20: the first counter\n\`\`\`Adrienne: Days since cannibalism: 0\`\`\`\n> 1/27/21: bot suggested\n\`\`\`Jesus: someone make a cannibalism counter bot\`\`\`\n> 1/30/21: bot created\n\`\`\`Server notification: Glad you're here, Hannibot Lecter.\`\`\`")
     	return
     }
     
     //TODO change to read/write lastReference to a file to persist between bot restarts
+    //added persistent storage for lastTime, but there's probably some vudu going on here with local variables that I'm too tired to fix 
     if(msg.content.toLowerCase().startsWith("!lasttime")) {
-	msg.reply("\""+lastReference+"\"")
+	//msg.channel.send("\""+lastReference+"\"")
+
+    fs.readFile("lastTime.txt", (err, data) => {
+        lastReference = data
+        if (file.length != 0){
+            msg.channel.send(lastReference)
+        } else {
+            msg.channel.send("Huh, it's never been brought up!")
+        }
+    })
+
 	return
     }
 	
-
 }
 )
