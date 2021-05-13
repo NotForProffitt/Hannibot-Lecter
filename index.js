@@ -64,8 +64,6 @@ fs.readFile('cannibalismCounter.txt', 'utf8', (err, data) => {
 	console.log('read cannibalismCounter file successfully')
 })
 
-
-
 //counter for incrementing daysSince var every 24 hours
 var interval = setInterval(increment, 86400000)
 function increment() {
@@ -91,6 +89,8 @@ bot.on('message', async (msg) => {
 		        cannibalismCounter++
 		        daysSince = 0
 		        lastReference = msg.content
+                msg.react('🍴')
+
                 fs.writeFile('lastTime.txt', lastReference.toString(), err => {
                 if (err) {
                     console.error(err)
@@ -179,7 +179,7 @@ bot.on('message', async (msg) => {
         }
 
         lastReference = data.toString()
-        msg.channel.send(lastReference)
+        msg.channel.send("\"" + lastReference + "\"")
     })
 
 	return
