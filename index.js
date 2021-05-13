@@ -87,38 +87,37 @@ bot.on('message', async (msg) => {
 	    for(i = 0; i < keywords.length; i++) {
 
 		//if msg contains reference, reset daysSince and increment cannibalismCounter
-		if(keywords[i].test(msg.content) && !msg.author.bot && !(msg.guild === null)) {
-            console.log("hello");
-		    cannibalismCounter++
-		    daysSince = 0
-		    lastReference = msg.content
-            fs.writeFile('lastTime.txt', lastReference.toString(), err => {
-            if (err) {
-                console.error(err)
-                return
-            }
-            console.log('lastTime logged successfully')
-            })
+		    if(keywords[i].test(msg.content) && !msg.author.bot && !(msg.guild === null)) {
+		        cannibalismCounter++
+		        daysSince = 0
+		        lastReference = msg.content
+                fs.writeFile('lastTime.txt', lastReference.toString(), err => {
+                if (err) {
+                    console.error(err)
+                    return
+                }
+                console.log('lastTime logged successfully')
+                })
 
-		    fs.writeFile('cannibalismCounter.txt', cannibalismCounter.toString(), err => {
-			if (err) {
-			    console.error(err)
-			    return
-			}
-			console.log('incremented cannibalismCounter count successfully')
-		    })
+		        fs.writeFile('cannibalismCounter.txt', cannibalismCounter.toString(), err => {
+			    if (err) {
+			        console.error(err)
+			        return
+			    }
+			    console.log('incremented cannibalismCounter count successfully')
+		        })
 
-		    fs.writeFile('daysSince.txt', daysSince.toString(), err => {
-			if (err) {
-			    console.error(err)
-			    return
-			}
-			console.log('reset DaySince count successfully')
-		    })
-		    lastMentionedDate = Date()
-		    console.log(cannibalismCounter)
-		    return
-		}
+		        fs.writeFile('daysSince.txt', daysSince.toString(), err => {
+			    if (err) {
+			        console.error(err)
+			        return
+			    }
+			    console.log('reset DaySince count successfully')
+		        })
+		        lastMentionedDate = Date()
+		        console.log(cannibalismCounter)
+		        return
+		    }
 	    }
 	    return
     }
@@ -178,8 +177,8 @@ bot.on('message', async (msg) => {
             console.error(err)
             return
         }
-        
-        lastReference = data
+
+        lastReference = data.toString()
         msg.channel.send(lastReference)
     })
 
