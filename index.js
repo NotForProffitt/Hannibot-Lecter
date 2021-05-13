@@ -131,7 +131,9 @@ bot.on('message', async (msg) => {
     //responds with the amount of days since cannibalism was last mentioned
     if(msg.content.toLowerCase().startsWith("!counter")) {
         console.log('counter call')
-        msg.channel.send(daysSince + " days since cannibalism was last mentioned in this server.")
+        //nasty ternary operation  because bendy is a grammer stickler >:(
+        daysSince != 1 ? msg.channel.send(daysSince + " days since cannibalism was last mentioned in this server.") : msg.channel.send(daysSince + " day since cannibalism was last mentioned in this server.")
+
 	return
     }
 
@@ -167,20 +169,16 @@ bot.on('message', async (msg) => {
     	return
     }
     
-    //TODO change to read/write lastReference to a file to persist between bot restarts
     //added persistent storage for lastTime, but there's probably some vudu going on here with local variables that I'm too tired to fix 
     if(msg.content.toLowerCase().startsWith("!lasttime")) {
-	//msg.channel.send("\""+lastReference+"\"")
-
-    fs.readFile("lastTime.txt", (err, data) => {
-        if (err) {
-            console.error(err)
-            return
-        }
-
-        lastReference = data.toString()
-        msg.channel.send("\"" + lastReference + "\"")
-    })
+        fs.readFile("lastTime.txt", (err, data) => {
+            if (err) {
+                console.error(err)
+                return
+            }
+            lastReference = data.toString()
+            msg.channel.send("\"" + lastReference + "\"")
+        })
 
 	return
     }
