@@ -79,6 +79,9 @@ function increment() {
 
 //on message, perform various checks
 bot.on('message', async (msg) => {
+
+    var server = msg.guild.toString()
+    
 	
     //this is here because I want it be, no other reason
     if(!msg.content.startsWith(prefix)) {
@@ -169,7 +172,7 @@ bot.on('message', async (msg) => {
     	return
     }
     
-    //added persistent storage for lastTime, but there's probably some vudu going on here with local variables that I'm too tired to fix 
+    //persistent storage for lastTime
     if(msg.content.toLowerCase().startsWith("!lasttime")) {
         fs.readFile("lastTime.txt", (err, data) => {
             if (err) {
