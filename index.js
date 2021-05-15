@@ -25,10 +25,15 @@ const database = createConnection({
   host: 'localhost',
   user: 'hannibot',
   password: DBpass,
-  database: 'hannibotDB',
+  database: 'HannibotDB',
 });
 
-database.connect();
+database.connect(err => {
+    //Console log if there is an error
+    if (err) return console.log(err);
+    //Otherwise
+    console.log(`connected to hannibotDB`);
+});
 
 //TODO something better than just string arrs for this
 //string array for !lecter command
@@ -92,20 +97,21 @@ function increment() {
 
 //on message, perform various checks
 bot.on('message', async (msg) => {
-
-    var server = msg.guild.toString()
     
-	
     //this is here because I want it be, no other reason
+    //checking if the message is not a command, then checks for reference to cannibalism
     if(!msg.content.startsWith(prefix)) {
 	    for(i = 0; i < keywords.length; i++) {
-
 		//if msg contains reference, reset daysSince and increment cannibalismCounter
 		    if(keywords[i].test(msg.content) && !msg.author.bot && !(msg.guild === null)) {
+                var server = msg.guild.toString()
 		        cannibalismCounter++
 		        daysSince = 0
 		        lastReference = msg.content
                 msg.react('🍴')
+
+
+                database.query('INSERT INTO guild IF NOT EXISTS')
 
                 fs.writeFile('lastTime.txt', lastReference.toString(), err => {
                 if (err) {
