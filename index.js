@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 var config = require('./config.js');
 const bot = new Discord.Client();
 const fs = require('fs')
+const DBpass = require('./DBpass.js');
 
 bot.on('ready', () => {
     console.log('bot is ready')
@@ -16,6 +17,18 @@ const prefix = '!'
 var daysSince = 0
 var cannibalismCounter = 0
 var lastReference = "Huh, it's never been brought up!"
+var mysql = require('mysql');
+
+const { createConnection } = require('mysql');
+
+const database = createConnection({
+  host: 'localhost',
+  user: 'hannibot',
+  password: DBpass,
+  database: 'hannibotDB',
+});
+
+database.connect();
 
 //TODO something better than just string arrs for this
 //string array for !lecter command
@@ -136,8 +149,7 @@ bot.on('message', async (msg) => {
         console.log('counter call')
         //nasty ternary operation  because bendy is a grammer stickler >:(
         daysSince != 1 ? msg.channel.send(daysSince + " days since cannibalism was last mentioned in this server.") : msg.channel.send(daysSince + " day since cannibalism was last mentioned in this server.")
-
-	return
+	    return
     }
 
     //sends the amount of times the word cannibalism has been said in the server
