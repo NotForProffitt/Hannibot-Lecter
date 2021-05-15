@@ -52,7 +52,7 @@ var quotes = [
 //TODO as above, so below
 var keywords = [
 	/cannibal(ismo?)?/i,
-        /eat(ing)? (people|him|her|them|you|flesh|me|the rich)/i,
+        / eat(ing)? (people|him|her|them|you|flesh|me|the rich)/i,
         /soylent green/i,
         /yummy flesh/i,
         /vore/i,
@@ -110,8 +110,8 @@ bot.on('message', async (msg) => {
 		        lastReference = msg.content
                 msg.react('🍴')
 
-
                 database.query('INSERT INTO guild IF NOT EXISTS')
+                database.query('INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES (server, cannibalismCounter, daysSince, lastReference) ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = lastReference')
 
                 fs.writeFile('lastTime.txt', lastReference.toString(), err => {
                 if (err) {
