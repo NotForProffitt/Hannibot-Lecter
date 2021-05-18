@@ -1,8 +1,8 @@
+//confusion?
 const Discord = require("discord.js");
 var config = require('./config.js');
 const bot = new Discord.Client();
 const fs = require('fs')
-const DBpass = require('./DBpass.js');
 
 bot.on('ready', () => {
     console.log('bot is ready')
@@ -17,23 +17,6 @@ const prefix = '!'
 var daysSince = 0
 var cannibalismCounter = 0
 var lastReference = "Huh, it's never been brought up!"
-var mysql = require('mysql');
-
-const { createConnection } = require('mysql');
-
-const database = createConnection({
-  host: 'localhost',
-  user: 'hannibot',
-  password: DBpass,
-  database: 'HannibotDB',
-});
-
-database.connect(err => {
-    //Console log if there is an error
-    if (err) return console.log(err);
-    //Otherwise
-    console.log(`connected to hannibotDB`);
-});
 
 //TODO something better than just string arrs for this
 //string array for !lecter command
@@ -110,9 +93,6 @@ bot.on('message', async (msg) => {
 		        lastReference = msg.content
                 msg.react('🍴')
 
-                database.query('INSERT INTO guild IF NOT EXISTS')
-                database.query('INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES (server, cannibalismCounter, daysSince, lastReference) ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = lastReference')
-
                 fs.writeFile('lastTime.txt', lastReference.toString(), err => {
                 if (err) {
                     console.error(err)
@@ -121,7 +101,7 @@ bot.on('message', async (msg) => {
                 console.log('lastTime logged successfully')
                 })
 
-		        fs.writeFile('cannibalismCounter.txt', cannibalismCounter.toString(), err => {
+		        fs.writeFile('cannibalismCounter.txt', cannibalismCounter.toString, err => {
 			    if (err) {
 			        console.error(err)
 			        return
