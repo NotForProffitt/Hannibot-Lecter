@@ -1,4 +1,3 @@
-//confusion?
 const Discord = require("discord.js");
 var config = require('./config.js');
 const bot = new Discord.Client();
