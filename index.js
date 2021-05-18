@@ -34,7 +34,7 @@ var quotes = [
 //TODO as above, so below
 var keywords = [
 	/cannibal(ismo?)?/i,
-        /eat(ing)? (people|him|her|them|you|flesh|me|the rich)/i,
+        / eat(ing)? (people|him|her|them|you|flesh|me|the rich)/i,
         /soylent green/i,
         /yummy flesh/i,
         /vore/i,
@@ -79,13 +79,14 @@ function increment() {
 
 //on message, perform various checks
 bot.on('message', async (msg) => {
-	
+    
     //this is here because I want it be, no other reason
+    //checking if the message is not a command, then checks for reference to cannibalism
     if(!msg.content.startsWith(prefix)) {
 	    for(i = 0; i < keywords.length; i++) {
-
 		//if msg contains reference, reset daysSince and increment cannibalismCounter
 		    if(keywords[i].test(msg.content) && !msg.author.bot && !(msg.guild === null)) {
+                var server = msg.guild.toString()
 		        cannibalismCounter++
 		        daysSince = 0
 		        lastReference = msg.content
@@ -99,7 +100,7 @@ bot.on('message', async (msg) => {
                 console.log('lastTime logged successfully')
                 })
 
-		        fs.writeFile('cannibalismCounter.txt', cannibalismCounter.toString(), err => {
+		        fs.writeFile('cannibalismCounter.txt', cannibalismCounter.toString, err => {
 			    if (err) {
 			        console.error(err)
 			        return
@@ -133,8 +134,7 @@ bot.on('message', async (msg) => {
         console.log('counter call')
         //nasty ternary operation  because bendy is a grammer stickler >:(
         daysSince != 1 ? msg.channel.send(daysSince + " days since cannibalism was last mentioned in this server.") : msg.channel.send(daysSince + " day since cannibalism was last mentioned in this server.")
-
-	return
+	    return
     }
 
     //sends the amount of times the word cannibalism has been said in the server
@@ -169,7 +169,7 @@ bot.on('message', async (msg) => {
     	return
     }
     
-    //added persistent storage for lastTime, but there's probably some vudu going on here with local variables that I'm too tired to fix 
+    //persistent storage for lastTime
     if(msg.content.toLowerCase().startsWith("!lasttime")) {
         fs.readFile("lastTime.txt", (err, data) => {
             if (err) {
