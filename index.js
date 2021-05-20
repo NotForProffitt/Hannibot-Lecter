@@ -170,9 +170,9 @@ bot.on('message', async (msg) => {
             console.log('cannibalismCounter: '+data)
             cannibalismCounter = Number(data)
 
-            //sql fun
+            //sql fun 
             database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
-                const result = Object.values(JSON.parse(JSON.stringify(results)));
+                const result = JSON.stringify(results);
                 console.log(result)
                 msg.channel.send("Cannibalism has been mentioned "+ result + " times in this server. Delicious!")
             })
