@@ -172,12 +172,9 @@ bot.on('message', async (msg) => {
 
             //sql fun
             //var counter = database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString())
-            try {
-                msg.channel.send(database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString()))    
-            }
-            catch(DiscordAPIError) {
-                //you're fine shut up
-            }
+            var response = database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString())
+            msg.channel.send(response)    
+            
             //nasty ternary operation  because bendy is a grammer stickler >:(
 	    cannibalismCounter == 1 ? msg.channel.send("Cannibalism has been mentioned 1 time in this server. Delicious!") : msg.channel.send("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!");
             console.log('read cannibalismCounter file successfully')
