@@ -110,8 +110,8 @@ bot.on('message', async (msg) => {
 		        lastReference = msg.content
                 msg.react('🍴')
 
-		var queryStr = "INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+server+","+cannibalismCounter+","+daysSince+",'"+lastReference+"') ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"';"
-		//console.log(queryStr)
+                //really fucking gross string for sql query my sincere apologies to anyone looking at this
+		        var queryStr = "INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+server+",1,"+daysSince+",'"+lastReference+"') ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"';"
                 database.query(queryStr)
 
                 fs.writeFile('lastTime.txt', lastReference.toString(), err => {
@@ -169,6 +169,10 @@ bot.on('message', async (msg) => {
             }
             console.log('cannibalismCounter: '+data)
             cannibalismCounter = Number(data)
+
+            //sql fun
+            //var counter = database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString())
+            msg.channel.send(database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString()))
 
 	    //nasty ternary operation  because bendy is a grammer stickler >:(
 	    cannibalismCounter == 1 ? msg.channel.send("Cannibalism has been mentioned 1 time in this server. Delicious!") : msg.channel.send("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!");
