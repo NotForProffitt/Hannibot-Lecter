@@ -173,6 +173,7 @@ bot.on('message', async (msg) => {
             //sql fun
             database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
                 var response = results[0]
+                console.log(response)
                 msg.channel.send(response)
             })
             //var response = database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString())
