@@ -104,14 +104,15 @@ bot.on('message', async (msg) => {
 	    for(i = 0; i < keywords.length; i++) {
 		//if msg contains reference, reset daysSince and increment cannibalismCounter
 		    if(keywords[i].test(msg.content) && !msg.author.bot && !(msg.guild === null)) {
-                var server = msg.guild.toString()
+                var server = msg.guild.id.toString()
 		        cannibalismCounter++
 		        daysSince = 0
 		        lastReference = msg.content
                 msg.react('🍴')
 
-                database.query('INSERT INTO guild IF NOT EXISTS')
-                database.query('INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES (server, cannibalismCounter, daysSince, lastReference) ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = lastReference')
+		var queryStr = "INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+server+","+cannibalismCounter+","+daysSince+",'"+lastReference+"') ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"';"
+		//console.log(queryStr)
+                database.query(queryStr)
 
                 fs.writeFile('lastTime.txt', lastReference.toString(), err => {
                 if (err) {
