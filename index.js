@@ -171,9 +171,12 @@ bot.on('message', async (msg) => {
             cannibalismCounter = Number(data)
 
             //sql fun
-            //var counter = database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString())
-            var response = database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString())
-            msg.channel.send("Cannibalism has been mentioned "+ response + " times in this server. Delicious!")    
+            database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
+                var response = results[0]
+                msg.channel.send(response)
+            }
+            //var response = database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString())
+            //msg.channel.send("Cannibalism has been mentioned "+ response + " times in this server. Delicious!")    
             
             //nasty ternary operation  because bendy is a grammer stickler >:(
 	    //cannibalismCounter == 1 ? msg.channel.send("Cannibalism has been mentioned 1 time in this server. Delicious!") : msg.channel.send("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!");
