@@ -19,7 +19,7 @@ var cannibalismCounter = 0
 var lastReference = "Huh, it's never been brought up!"
 var mysql = require('mysql');
 
-const { createConnection } = require('mysql');
+const {createConnection} = require('mysql');
 
 const database = createConnection({
   host: 'localhost',
@@ -56,47 +56,20 @@ var quotes = [
 //TODO as above, so below
 var keywords = [
 	/cannibal(ismo?)?/i,
-        / eat(ing)? (people|him|her|them|you|flesh|me|the rich)/i,
-        /soylent green/i,
-        /yummy flesh/i,
-        /vore/i,
+    / eat(ing)? (people|him|her|them|you|flesh|me|the rich)/i,
+    /soylent green/i,
+    /yummy flesh/i,
+    /vore/i,
 	/namira/i,
     /(friends|people|humans) are food/i,
     /eat <@!?(\d{17,19})>/ig // <@!?(\d{17,19})> is the regex for a user mention; idk how to elegantly combine regex literals, so I did console.log(Discord.MessageMentions.USERS_PATTERN) and copy-pasted it here
 ]
 
-//reads in the value stored in the daysSince and cannibalismCounter file to the var
-fs.readFile('daysSince.txt', 'utf8', (err, data) => {
-    if(err) {
-        console.error(err)
-        return
-    }
-    console.log('days since: '+data)
-    daysSince = Number(data)
-    console.log('read daysSince file successfully')
-})
-
-fs.readFile('cannibalismCounter.txt', 'utf8', (err, data) => {
-	if(err) {
-		console.error(err)
-		return
-	}
-	console.log('cannibalism Counter: '+data)
-	cannibalismCounter = Number(data)
-	console.log('read cannibalismCounter file successfully')
-})
-
 //counter for incrementing daysSince var every 24 hours
 var interval = setInterval(increment, 86400000)
 function increment() {
     daysSince++
-    fs.writeFile('daysSince.txt', daysSince, err => {
-        if(err) {
-            console.error(err)
-            return
-        }
-        console.log('incremented DaysSince count successfully')
-    })
+    database.query("UPDATE guild SET daysSince = daysSince + 1 WHERE guildID = "+guild.id.toString()+";")
 }
 
 //on message, perform various checks
@@ -134,11 +107,9 @@ bot.on('message', async (msg) => {
     //responds with the amount of days since cannibalism was last mentioned
     if(msg.content.toLowerCase().startsWith("!counter")) {
         console.log('counter call')
-
         database.query('SELECT daysSince FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
             const result = JSON.parse(JSON.stringify(results[0].daysSince));
             console.log(result)
-
             //nasty ternary operation  because bendy is a grammer stickler >:(
             result != 1 ? msg.channel.send(result + " days since cannibalism was last mentioned in this server.") : msg.channel.send(result + " day since cannibalism was last mentioned in this server.")
         })
@@ -172,7 +143,7 @@ bot.on('message', async (msg) => {
     	return
     }
     
-    //persistent storage for lastTime
+    //returns the last message that referenced cannibalism
     if(msg.content.toLowerCase().startsWith("!lasttime")) {
         //sql fun 
         database.query('SELECT lastTime FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
