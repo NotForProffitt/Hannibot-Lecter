@@ -99,13 +99,13 @@ bot.on('message', async (msg) => {
     }
 
     //because every good bot has one
-    if(msg.content.toLowerCase().startsWith("!help")) {
+    if(msg.content.toLowerCase() === "!help") {
         msg.channel.send("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\n!history: relays the tale of how Hannibot-Lecter came to be.\n!lasttime: shows the last message the contained reference to cannibalism.\n\ncontribute at: https://github.com/NotForProffitt/Hannibot-Lecter\n\nContact ProbablyNotAFurry#6782 for issues, questions, or comments.\`\`\`")
     	return
     }
 
     //responds with the amount of days since cannibalism was last mentioned
-    if(msg.content.toLowerCase().startsWith("!counter")) {
+    if(msg.content.toLowerCase() === "!counter") {
         console.log('counter call')
         database.query('SELECT daysSince FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
             const result = JSON.parse(JSON.stringify(results[0].daysSince));
@@ -117,7 +117,7 @@ bot.on('message', async (msg) => {
     }
 
     //sends the amount of times the word cannibalism has been said in the server
-    if(msg.content.toLowerCase().startsWith("!wordcount")) {
+    if(msg.content.toLowerCase() === "!wordcount") {
         console.log('word count call')
             //sql fun 
             database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
@@ -130,21 +130,21 @@ bot.on('message', async (msg) => {
     }
 
     //sends a quote from Hannibal Lector chosen at random from an array of responses
-    if (msg.content.toLowerCase().startsWith("!lecter")) {
+    if (msg.content.toLowerCase() === "!lecter") {
         console.log('lecter quote')
         msg.channel.send(quotes[Math.floor(Math.random() * 4) + 1])
 	return
     }
 
     //regales us with the grand tale of how Hannibot Lecter came to be
-    if (msg.content.toLowerCase().startsWith("!history")) {
+    if (msg.content.toLowerCase() === "!history") {
         console.log("history")
         msg.channel.send("\n> History of Hannibot-Lecter:\n> 12/4/20: the first mention (conceptually)\n\`\`\`Charleston Boole: I will eat the server\`\`\`\n> 1/21/20: the first counter\n\`\`\`Adrienne: Days since cannibalism: 0\`\`\`\n> 1/27/21: bot suggested\n\`\`\`Jesus: someone make a cannibalism counter bot\`\`\`\n> 1/30/21: bot created\n\`\`\`Server notification: Glad you're here, Hannibot Lecter.\`\`\`")
     	return
     }
     
     //returns the last message that referenced cannibalism
-    if(msg.content.toLowerCase().startsWith("!lasttime")) {
+    if(msg.content.toLowerCase() === "!lasttime") {
         //sql fun 
         database.query('SELECT lastTime FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
            const result = JSON.parse(JSON.stringify(results[0].lastTime));
