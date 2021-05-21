@@ -111,6 +111,7 @@ bot.on('message', async (msg) => {
                 msg.react('🍴')
 
                 //really fucking gross string for sql query my sincere apologies to anyone looking at this
+                //TODO create a table on server join instead of ON DUPLICATE KEY UPDATE
 		        var queryStr = "INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+server+",1,"+daysSince+",'"+lastReference+"') ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"';"
                 database.query(queryStr)
 
@@ -154,8 +155,15 @@ bot.on('message', async (msg) => {
     //responds with the amount of days since cannibalism was last mentioned
     if(msg.content.toLowerCase().startsWith("!counter")) {
         console.log('counter call')
+
+        database.query('SELECT daysSince FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
+            const result = JSON.parse(JSON.stringify(results[0].daysSince));
+            console.log(result)
+            result != 1 ? msg.channel.send(result + " days since cannibalism was last mentioned in this server.") : msg.channel.send(result + " day since cannibalism was last mentioned in this server.")
+        })  
+
         //nasty ternary operation  because bendy is a grammer stickler >:(
-        daysSince != 1 ? msg.channel.send(daysSince + " days since cannibalism was last mentioned in this server.") : msg.channel.send(daysSince + " day since cannibalism was last mentioned in this server.")
+        //daysSince != 1 ? msg.channel.send(daysSince + " days since cannibalism was last mentioned in this server.") : msg.channel.send(daysSince + " day since cannibalism was last mentioned in this server.")
 	    return
     }
 
@@ -176,9 +184,7 @@ bot.on('message', async (msg) => {
             
                 console.log(result)
                 msg.channel.send("Cannibalism has been mentioned "+ result + " times in this server. Delicious!")
-            })
-            //var response = database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString())
-            //msg.channel.send("Cannibalism has been mentioned "+ response + " times in this server. Delicious!")    
+            })  
             
             //nasty ternary operation  because bendy is a grammer stickler >:(
 	    //cannibalismCounter == 1 ? msg.channel.send("Cannibalism has been mentioned 1 time in this server. Delicious!") : msg.channel.send("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!");
