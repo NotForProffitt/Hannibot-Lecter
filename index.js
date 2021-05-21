@@ -159,37 +159,23 @@ bot.on('message', async (msg) => {
         database.query('SELECT daysSince FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
             const result = JSON.parse(JSON.stringify(results[0].daysSince));
             console.log(result)
+
+            //nasty ternary operation  because bendy is a grammer stickler >:(
             result != 1 ? msg.channel.send(result + " days since cannibalism was last mentioned in this server.") : msg.channel.send(result + " day since cannibalism was last mentioned in this server.")
         })  
-
-        //nasty ternary operation  because bendy is a grammer stickler >:(
-        //daysSince != 1 ? msg.channel.send(daysSince + " days since cannibalism was last mentioned in this server.") : msg.channel.send(daysSince + " day since cannibalism was last mentioned in this server.")
 	    return
     }
 
     //sends the amount of times the word cannibalism has been said in the server
     if(msg.content.toLowerCase().startsWith("!wordcount")) {
-        console.log('word count')
-        fs.readFile('cannibalismCounter.txt', 'utf8', (err, data) => {
-            if (err) {
-                console.error(err)
-                return
-            }
-            console.log('cannibalismCounter: '+data)
-            cannibalismCounter = Number(data)
-
+        console.log('word count call')
             //sql fun 
             database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
                 const result = JSON.parse(JSON.stringify(results[0].cannibalismCounter));
-            
                 console.log(result)
-                msg.channel.send("Cannibalism has been mentioned "+ result + " times in this server. Delicious!")
+                //nasty ternary operation  because bendy is a grammer stickler >:(
+                result != 1 ? msg.channel.send("Cannibalism has been mentioned "+ result + " times in this server. Delicious!") : msg.channel.send("Cannibalism has been mentioned "+ result + " time in this server. Delicious!") 
             })  
-            
-            //nasty ternary operation  because bendy is a grammer stickler >:(
-	    //cannibalismCounter == 1 ? msg.channel.send("Cannibalism has been mentioned 1 time in this server. Delicious!") : msg.channel.send("Cannibalism has been mentioned " + cannibalismCounter + " times in this server. Delicious!");
-            console.log('read cannibalismCounter file successfully')
-        })
     	return
     }
 
@@ -209,15 +195,21 @@ bot.on('message', async (msg) => {
     
     //persistent storage for lastTime
     if(msg.content.toLowerCase().startsWith("!lasttime")) {
-        fs.readFile("lastTime.txt", (err, data) => {
-            if (err) {
-                console.error(err)
-                return
-            }
-            lastReference = data.toString()
-            msg.channel.send("\"" + lastReference + "\"")
-        })
+        //fs.readFile("lastTime.txt", (err, data) => {
+        //    if (err) {
+        //        console.error(err)
+        //        return
+        //    }
+        //    lastReference = data.toString()
+        //    msg.channel.send("\"" + lastReference + "\"")
+        //})
 
+        //sql fun 
+        database.query('SELECT lastTime FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
+           const result = JSON.parse(JSON.stringify(results[0].lastTime));
+           console.log(result)
+           msg.channel.send("\"" + lastReference + "\"")
+        })
 	return
     }
 	
