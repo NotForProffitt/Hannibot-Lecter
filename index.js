@@ -35,6 +35,12 @@ database.connect(err => {
     console.log(`connected to hannibotDB`);
 });
 
+bot.on("guildCreate", (guild) => {
+    // This event triggers when the bot joins a guild.    
+    console.log(`Joined new guild: ${guild.name}`)
+    database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+server+",1,0,'"+lastReference+"')")
+});
+
 //TODO something better than just string arrs for this
 //string array for !lecter command
 var quotes = [
@@ -46,8 +52,6 @@ var quotes = [
         "I do wish we could chat longer, but I'm having an old friend for dinner.",
         "Well, whaddya know? A human sandwich. (Looks inside) Wouldn't you know, it needs some mustard.",
 ]
-
-// console.log("user pattern: " + Discord.MessageMentions.USERS_PATTERN);
 
 //TODO as above, so below
 var keywords = [
@@ -97,47 +101,22 @@ function increment() {
 
 //on message, perform various checks
 bot.on('message', async (msg) => {
-    
     //this is here because I want it be, no other reason
     //checking if the message is not a command, then checks for reference to cannibalism
     if(!msg.content.startsWith(prefix)) {
 	    for(i = 0; i < keywords.length; i++) {
 		//if msg contains reference, reset daysSince and increment cannibalismCounter
 		    if(keywords[i].test(msg.content) && !msg.author.bot && !(msg.guild === null)) {
+                msg.react('🍴')
                 var server = msg.guild.id.toString()
-		        cannibalismCounter++
 		        daysSince = 0
 		        lastReference = msg.content
-                msg.react('🍴')
 
                 //really fucking gross string for sql query my sincere apologies to anyone looking at this
-                //TODO create a table on server join instead of ON DUPLICATE KEY UPDATE
 		        var queryStr = "INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+server+",1,"+daysSince+",'"+lastReference+"') ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"';"
-                database.query(queryStr)
-
-                fs.writeFile('lastTime.txt', lastReference.toString(), err => {
-                if (err) {
-                    console.error(err)
-                    return
-                }
-                console.log('lastTime logged successfully')
-                })
-
-		        fs.writeFile('cannibalismCounter.txt', cannibalismCounter.toString(), err => {
-			    if (err) {
-			        console.error(err)
-			        return
-			    }
-			    console.log('incremented cannibalismCounter count successfully')
-		        })
-
-		        fs.writeFile('daysSince.txt', daysSince.toString(), err => {
-			    if (err) {
-			        console.error(err)
-			        return
-			    }
-			    console.log('reset DaySince count successfully')
-		        })
+                var otherQuery = "UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"' WHERE guildID = "+server+";"
+                database.query(otherQuery)
+		       
 		        lastMentionedDate = Date()
 		        console.log(cannibalismCounter)
 		        return
@@ -186,7 +165,7 @@ bot.on('message', async (msg) => {
 	return
     }
 
-    //regales us with the grand tale of how Hannibot lecter came to be
+    //regales us with the grand tale of how Hannibot Lecter came to be
     if (msg.content.toLowerCase().startsWith("!history")) {
         console.log("history")
         msg.channel.send("\n> History of Hannibot-Lecter:\n> 12/4/20: the first mention (conceptually)\n\`\`\`Charleston Boole: I will eat the server\`\`\`\n> 1/21/20: the first counter\n\`\`\`Adrienne: Days since cannibalism: 0\`\`\`\n> 1/27/21: bot suggested\n\`\`\`Jesus: someone make a cannibalism counter bot\`\`\`\n> 1/30/21: bot created\n\`\`\`Server notification: Glad you're here, Hannibot Lecter.\`\`\`")
@@ -195,15 +174,6 @@ bot.on('message', async (msg) => {
     
     //persistent storage for lastTime
     if(msg.content.toLowerCase().startsWith("!lasttime")) {
-        //fs.readFile("lastTime.txt", (err, data) => {
-        //    if (err) {
-        //        console.error(err)
-        //        return
-        //    }
-        //    lastReference = data.toString()
-        //    msg.channel.send("\"" + lastReference + "\"")
-        //})
-
         //sql fun 
         database.query('SELECT lastTime FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
            const result = JSON.parse(JSON.stringify(results[0].lastTime));
@@ -212,6 +182,5 @@ bot.on('message', async (msg) => {
         })
 	return
     }
-	
 }
 )
