@@ -113,7 +113,7 @@ bot.on('message', async (msg) => {
 		        lastReference = msg.content
 
                 //really fucking gross string for sql query my sincere apologies to anyone looking at this
-		        var queryStr = "INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+server+",1,"+daysSince+",'"+lastReference+"') ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"';"
+		        //var queryStr = "INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+server+",1,"+daysSince+",'"+lastReference+"') ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"';"
                 var otherQuery = "UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"' WHERE guildID = "+server+";"
                 database.query(otherQuery)
 		       
@@ -141,7 +141,7 @@ bot.on('message', async (msg) => {
 
             //nasty ternary operation  because bendy is a grammer stickler >:(
             result != 1 ? msg.channel.send(result + " days since cannibalism was last mentioned in this server.") : msg.channel.send(result + " day since cannibalism was last mentioned in this server.")
-        })  
+        })
 	    return
     }
 
@@ -178,7 +178,7 @@ bot.on('message', async (msg) => {
         database.query('SELECT lastTime FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
            const result = JSON.parse(JSON.stringify(results[0].lastTime));
            console.log(result)
-           msg.channel.send("\"" + lastReference + "\"")
+           msg.channel.send("\"" + result + "\"")
         })
 	return
     }
