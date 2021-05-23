@@ -16,7 +16,7 @@ const prefix = '!'
 //usage data
 var daysSince = 0
 var cannibalismCounter = 0
-var lastReference = "Huh, it's never been brought up!"
+var lastReference = "Huh, it\'s never been brought up!"
 var mysql = require('mysql');
 
 const {createConnection} = require('mysql');
