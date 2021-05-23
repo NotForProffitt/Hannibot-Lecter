@@ -38,7 +38,7 @@ database.connect(err => {
 bot.on("guildCreate", (guild) => {
     // This event triggers when the bot joins a guild.    
     console.log(`Joined new guild: ${guild.name}`)
-    database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+guild.id.toString()+",1,0,'"+lastReference+"')")
+    database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+guild.id.toString()+",1,0,'"+lastReference+"';")
 });
 
 //TODO something better than just string arrs for this
