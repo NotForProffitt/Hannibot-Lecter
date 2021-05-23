@@ -38,7 +38,8 @@ database.connect(err => {
 bot.on("guildCreate", (guild) => {
     // This event triggers when the bot joins a guild.    
     console.log(`Joined new guild: ${guild.name}`)
-    database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+guild.id.toString()+", 1, 0, \'nothing here!\';")
+    //database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+guild.id.toString()+", 1, 0, \'nothing here!\';")
+    database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+guild.id.toString()+",1,0,'"+lastReference+"') ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"';")
 });
 
 //TODO something better than just string arrs for this
