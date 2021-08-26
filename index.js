@@ -73,6 +73,11 @@ function increment() {
     database.query("UPDATE guild SET daysSince = daysSince + 1 WHERE guildID = "+guild.id.toString()+";")
 }
 
+var intervalPing = setInterval(ping, 25200000)
+function ping() {
+    database.query("SELECT 1;")
+}
+
 //on message, perform various checks
 bot.on('message', async (msg) => {
     //this is here because I want it be, no other reason
