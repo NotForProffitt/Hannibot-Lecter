@@ -70,7 +70,7 @@ var keywords = [
 var interval = setInterval(increment, 86400000)
 function increment() {
     daysSince++
-    database.query("UPDATE guild SET daysSince = daysSince + 1 WHERE guildID = "+guild.id.toString()+";")
+    database.query("UPDATE guild SET daysSince = daysSince + 1 WHERE guildID = "+this.client.guilds.get(data.guild_id)+";")
 }
 
 var intervalPing = setInterval(ping, 25200000)
