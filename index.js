@@ -19,6 +19,7 @@ var cannibalismCounter = 0
 var lastReference = "nothing here!"
 var mysql = require('mysql')
 var serverName = bot.guilds.cache.get(serverID)
+var server = bot.guild.name
 
 const {createConnection} = require('mysql')
 
@@ -71,7 +72,7 @@ var keywords = [
 var interval = setInterval(increment, 86400000)
 function increment() {
     daysSince++
-    database.query("UPDATE guild SET daysSince = daysSince + 1 WHERE guildID = "+serverName+";")
+    database.query("UPDATE guild SET daysSince = daysSince + 1;")
 }
 
 var intervalPing = setInterval(ping, 25200000)
