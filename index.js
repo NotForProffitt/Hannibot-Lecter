@@ -18,8 +18,6 @@ var daysSince = 0
 var cannibalismCounter = 0
 var lastReference = "nothing here!"
 var mysql = require('mysql')
-var serverName = bot.guilds.cache.get(serverID)
-var server = bot.guild.name
 
 const {createConnection} = require('mysql')
 
