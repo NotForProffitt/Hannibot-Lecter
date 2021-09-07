@@ -168,7 +168,6 @@ bot.on('message', async (msg) => {
         database.query('SELECT SUM(cannibalismCounter) as globalCount FROM guild;', function (error, results, fields) {
             const result = JSON.parse(JSON.stringify(results[0].globalCount))
             console.log('!globalcount call: \"' + result + '\" in guild \"' + msg.guild.name + '\" ID: ' +msg.guild.id.toString())
-            msg.channel.send("\"" + result + "\"")
             result != 1 ? msg.channel.send("Cannibalism has been mentioned "+ result + " times in all servers. Delectable!") : msg.channel.send("Cannibalism has been mentioned "+ result + " time in all servers. Delectable!") 
         })
     return
