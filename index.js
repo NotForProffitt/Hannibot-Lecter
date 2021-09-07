@@ -93,13 +93,10 @@ bot.on('message', async (msg) => {
                 msg.react('🍴')
                 var server = database.escape(msg.guild.id.toString())
 		        daysSince = 0
-		        lastReference = "\'" + database.escape(msg.content) + "\'"
+		        lastReference = msg.content
 
-                //sanitized SQL input
-                database.query("UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = ? WHERE guildID = ?;",[
-                    lastReference,
-                    server
-                ])
+                var otherQuery = "UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"' WHERE guildID = "+server+";"
+                database.query(otherQuery)
 		       
 		        lastMentionedDate = Date()
 		        console.log('Counter update: ' + cannibalismCounter)
@@ -120,7 +117,7 @@ bot.on('message', async (msg) => {
     if(msg.content.toLowerCase() === "!counter") {
         database.query('SELECT daysSince FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
             const result = JSON.parse(JSON.stringify(results[0].daysSince));
-            console.log('!counter call: \"' + result + '\" in guild \"' + msg.guild.name + '\"')
+            console.log('!counter call in guild \"' + msg.guild.name + '\"')
             //nasty ternary operation  because bendy is a grammer stickler >:(
             result != 1 ? msg.channel.send(result + " days since cannibalism was last mentioned in this server.") : msg.channel.send(result + " day since cannibalism was last mentioned in this server.")
         })
