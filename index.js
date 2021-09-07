@@ -93,7 +93,7 @@ bot.on('message', async (msg) => {
                 msg.react('🍴')
                 var server = database.escape(msg.guild.id.toString())
 		        daysSince = 0
-		        lastReference = msg.content
+		        lastReference = database.escape(msg.content)
 
                 var otherQuery = "UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"' WHERE guildID = "+server+";"
                 database.query(otherQuery)
