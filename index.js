@@ -38,8 +38,12 @@ database.connect(err => {
 bot.on("guildCreate", (guild) => {
     // This event triggers when the bot joins a guild.    
     console.log(`Joined new guild: ${guild.name}`)
-    //database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+guild.id.toString()+", 1, 0, \'nothing here!\';")
-    database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+guild.id.toString()+",1,0,'"+lastReference+"') ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"';")
+    //sanitized SQL input
+    database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+guild.id.toString()+",1,0,'"+lastReference+"') ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"';",[
+        req.body.guild.id.toString(),
+        req.body.lastReference,
+        req.body.lastReference
+    ])
 });
 
 //TODO something better than just string arrs for this
@@ -91,10 +95,11 @@ bot.on('message', async (msg) => {
 		        daysSince = 0
 		        lastReference = msg.content
 
-                //really fucking gross string for sql query my sincere apologies to anyone looking at this
-		        //var queryStr = "INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+server+",1,"+daysSince+",'"+lastReference+"') ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"';"
-                var otherQuery = "UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"' WHERE guildID = "+server+";"
-                database.query(otherQuery)
+                //sanitized SQL input
+                database.query("UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = ''?'' WHERE guildID = ?;",[
+                    req.body.lastReference,
+                    req.body.server
+                ])
 		       
 		        lastMentionedDate = Date()
 		        console.log(cannibalismCounter)
