@@ -1,14 +1,15 @@
 const Discord = require("discord.js");
 var config = require('./config.js');
-const bot = new Discord.Client();
 const fs = require('fs')
 const DBpass = require('./DBpass.js');
+var mysql = require('mysql')
+const bot = new Discord.Client();
+
+bot.login(require('./config'))
 
 bot.on('ready', () => {
     console.log('bot is ready')
 })
-
-bot.login(require('./config'))
 
 //used to denote commands
 const prefix = '!'
@@ -17,7 +18,6 @@ const prefix = '!'
 var daysSince = 0
 var cannibalismCounter = 0
 var lastReference = "nothing here!"
-var mysql = require('mysql')
 
 const {createConnection} = require('mysql')
 
@@ -40,9 +40,9 @@ bot.on("guildCreate", (guild) => {
     console.log(`Joined new guild: ${guild.name}`)
     //sanitized SQL input
     database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+guild.id.toString()+",1,0,'"+lastReference+"') ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"';",[
-        req.body.guild.id.toString(),
-        req.body.lastReference,
-        req.body.lastReference
+        guild.id.toString(),
+        lastReference,
+        lastReference
     ])
 });
 
@@ -97,8 +97,8 @@ bot.on('message', async (msg) => {
 
                 //sanitized SQL input
                 database.query("UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = ''?'' WHERE guildID = ?;",[
-                    req.body.lastReference,
-                    req.body.server
+                    lastReference,
+                    server
                 ])
 		       
 		        lastMentionedDate = Date()
