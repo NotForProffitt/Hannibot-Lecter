@@ -112,14 +112,15 @@ bot.on('message', async (msg) => {
     //because every good bot has one
     if(msg.content.toLowerCase() === "!help") {
         msg.channel.send("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\n!history: relays the tale of how Hannibot-Lecter came to be.\n!lasttime: shows the last message the contained reference to cannibalism.\n\ncontribute at: https://github.com/NotForProffitt/Hannibot-Lecter\n\nContact Bisclavret#6782 for issues, questions, or comments.\`\`\`")
-    	return
+    	console.log('!help call in guild ' + msg.guild.name)
+        return
     }
 
     //responds with the amount of days since cannibalism was last mentioned
     if(msg.content.toLowerCase() === "!counter") {
         database.query('SELECT daysSince FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
             const result = JSON.parse(JSON.stringify(results[0].daysSince));
-            console.log('!counter call: ' + result + ' in guild ' + msg.guild.id.toString())
+            console.log('!counter call: \"' + result + '\" in guild ' + msg.guild.name)
             //nasty ternary operation  because bendy is a grammer stickler >:(
             result != 1 ? msg.channel.send(result + " days since cannibalism was last mentioned in this server.") : msg.channel.send(result + " day since cannibalism was last mentioned in this server.")
         })
@@ -131,7 +132,7 @@ bot.on('message', async (msg) => {
             //sql fun 
             database.query('SELECT cannibalismCounter FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
                 const result = JSON.parse(JSON.stringify(results[0].cannibalismCounter));
-                console.log('!wordcount call: ' + result + ' in guild ' + msg.guild.id.toString())
+                console.log('!wordcount call: \"' + result + '\" in guild ' + msg.guild.name)
                 //nasty ternary operation because bendy is a grammer stickler >:(
                 result != 1 ? msg.channel.send("Cannibalism has been mentioned "+ result + " times in this server. Delicious!") : msg.channel.send("Cannibalism has been mentioned "+ result + " time in this server. Delicious!") 
             })  
@@ -140,14 +141,14 @@ bot.on('message', async (msg) => {
 
     //sends a quote from Hannibal Lector chosen at random from an array of responses
     if (msg.content.toLowerCase() === "!lecter") {
-        console.log('!lecter call in guild ' + msg.guild.id.toString())
+        console.log('!lecter call in guild ' + msg.guild.name)
         msg.channel.send(quotes[Math.floor(Math.random() * 4) + 1])
 	return
     }
 
     //regales us with the grand tale of how Hannibot Lecter came to be
     if (msg.content.toLowerCase() === "!history") {
-        console.log('!history call in guild ' + msg.guild.id.toString())
+        console.log('!history call in guild ' + msg.guild.name)
         msg.channel.send("\n> History of Hannibot-Lecter:\n> 12/4/20: the first mention (conceptually)\n\`\`\`Charleston Boole: I will eat the server\`\`\`\n> 1/21/20: the first counter\n\`\`\`Adrienne: Days since cannibalism: 0\`\`\`\n> 1/27/21: bot suggested\n\`\`\`Jesus: someone make a cannibalism counter bot\`\`\`\n> 1/30/21: bot created\n\`\`\`Server notification: Glad you're here, Hannibot Lecter.\`\`\`")
     	return
     }
@@ -157,7 +158,7 @@ bot.on('message', async (msg) => {
         //sql fun 
         database.query('SELECT lastTime FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
            const result = JSON.parse(JSON.stringify(results[0].lastTime));
-           console.log('!lasttime call: ' + result + ' in guild ' + msg.guild.id.toString())
+           console.log('!lasttime call: \"' + result + '\" in guild ' + msg.guild.name)
            msg.channel.send("\"" + result + "\"")
         })
 	return
