@@ -40,7 +40,7 @@ bot.on("guildCreate", (guild) => {
     console.log(`Joined new guild: ${guild.name}`)
     //sanitized SQL input
     database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES (?,1,0,?) ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = ?;",[
-        database.escape(guild.id.toString()),
+        database.escape(guild.name.toString()),
         database.escape(lastReference),
         database.escape(lastReference)
     ])
