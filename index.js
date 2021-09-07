@@ -46,7 +46,6 @@ bot.on("guildCreate", (guild) => {
     ])
 });
 
-//TODO something better than just string arrs for this
 //string array for !lecter command
 var quotes = [
 	"",
@@ -58,7 +57,6 @@ var quotes = [
         "Well, whaddya know? A human sandwich. (Looks inside) Wouldn't you know, it needs some mustard.",
 ]
 
-//TODO as above, so below
 var keywords = [
 	/cannibal(ismo?)?/i,
     / eat(ing)? (people|him|her|them|you|flesh|me|the rich)/i,
@@ -77,6 +75,7 @@ function increment() {
     database.query("UPDATE guild SET daysSince = daysSince + 1;")
 }
 
+//Pings the DB every 7 hours to prevent connection timeout
 var intervalPing = setInterval(ping, 25200000)
 function ping() {
     database.query("SELECT 1;")
@@ -84,7 +83,6 @@ function ping() {
 
 //on message, perform various checks
 bot.on('message', async (msg) => {
-    //this is here because I want it be, no other reason
     //checking if the message is not a command, then checks for reference to cannibalism
     if(!msg.content.startsWith(prefix)) {
 	    for(i = 0; i < keywords.length; i++) {
@@ -95,10 +93,9 @@ bot.on('message', async (msg) => {
 		        daysSince = 0
 		        lastReference = database.escape(msg.content)
 
-                var otherQuery = "UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = " + lastReference + " WHERE guildID = " + server + ";"
-                database.query(otherQuery)
+                var queryStr = "UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = " + lastReference + " WHERE guildID = " + server + ";"
+                database.query(queryStr)
 		       
-		        lastMentionedDate = Date()
 		        console.log('Counter update: ' + cannibalismCounter + 'in guild \"' + msg.guild.name + '\" ID: ' +msg.guild.id.toString())
 		        return
 		    }
@@ -106,9 +103,15 @@ bot.on('message', async (msg) => {
 	    return
     }
 
+    /*
+    =============
+    Bot Commands:
+    =============
+    */
+
     //because every good bot has one
     if(msg.content.toLowerCase() === "!help") {
-        msg.channel.send("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\n!history: relays the tale of how Hannibot-Lecter came to be.\n!lasttime: shows the last message the contained reference to cannibalism.\n\ncontribute at: https://github.com/NotForProffitt/Hannibot-Lecter\n\nContact Bisclavret#6782 for issues, questions, or comments.\`\`\`")
+        msg.channel.send("\`\`\`!help: shows this menu.\n!counter: see how long it has been since cannibalism was mentioned in this server.\n!wordcount: see how many times cannibalism has been mentioned in this server.\n!lecter: get a quote from everybody's favorite cannibal!\n!history: relays the tale of how Hannibot-Lecter came to be.\n!lasttime: shows the last message the contained reference to cannibalism.\n!globalcount: shows how many times cannibalism has been mentioned in all of Hannibot's servers\n\ncontribute at: https://github.com/NotForProffitt/Hannibot-Lecter\n\nContact Bisclavret#6782 for issues, questions, or comments.\`\`\`")
     	console.log('!help call in guild \"' + msg.guild.name + '\" ID: ' +msg.guild.id.toString())
         return
     }
@@ -152,13 +155,23 @@ bot.on('message', async (msg) => {
     
     //returns the last message that referenced cannibalism
     if(msg.content.toLowerCase() === "!lasttime") {
-        //sql fun 
         database.query('SELECT lastTime FROM guild WHERE guildID = ' + msg.guild.id.toString(), function (error, results, fields) {
            const result = JSON.parse(JSON.stringify(results[0].lastTime));
            console.log('!lasttime call: \"' + result + '\" in guild \"' + msg.guild.name + '\" ID: ' +msg.guild.id.toString())
            msg.channel.send("\"" + result + "\"")
         })
 	return
+    }
+
+    //returns the sum of all cannibalism counters
+    if(msg.content.toLowerCase() === "!globalcount") {
+        database.query('SELECT SUM(cannibalismCounter) as globalCount FROM guild;', function (error, results, fields) {
+            const result = JSON.parse(JSON.stringify(results[0].globalCount))
+            console.log('!globalcount call: \"' + result + '\" in guild \"' + msg.guild.name + '\" ID: ' +msg.guild.id.toString())
+            msg.channel.send("\"" + result + "\"")
+            result != 1 ? msg.channel.send("Cannibalism has been mentioned "+ result + " times in all servers. Delectable!") : msg.channel.send("Cannibalism has been mentioned "+ result + " time in all servers. Delectable!") 
+        })
+    return
     }
 }
 )
