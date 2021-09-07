@@ -40,9 +40,9 @@ bot.on("guildCreate", (guild) => {
     console.log(`Joined new guild: ${guild.name}`)
     //sanitized SQL input
     database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES ("+guild.id.toString()+",1,0,'"+lastReference+"') ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"';",[
-        guild.id.toString(),
-        lastReference,
-        lastReference
+        database.escape(guild.id.toString()),
+        database.escape(lastReference),
+            database.escape(lastReference)
     ])
 });
 
@@ -97,8 +97,8 @@ bot.on('message', async (msg) => {
 
                 //sanitized SQL input
                 database.query("UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = ''?'' WHERE guildID = ?;",[
-                    lastReference,
-                    server
+                    database.escape(lastReference),
+                    database.escape(server)
                 ])
 		       
 		        lastMentionedDate = Date()
