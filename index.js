@@ -39,7 +39,7 @@ bot.on("guildCreate", (guild) => {
     // This event triggers when the bot joins a guild.    
     console.log(`Joined new guild: ${guild.name}`)
     //sanitized SQL input
-    database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES (?,1,0,?) ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '?';",[
+    database.query("INSERT INTO guild (guildID, cannibalismCounter, daysSince, lastTime) VALUES (?,1,0,?) ON DUPLICATE KEY UPDATE cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = ?;",[
         database.escape(guild.id.toString()),
         database.escape(lastReference),
         database.escape(lastReference)
@@ -95,7 +95,7 @@ bot.on('message', async (msg) => {
 		        daysSince = 0
 		        lastReference = database.escape(msg.content)
 
-                var otherQuery = "UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = "+lastReference+" WHERE guildID = "+server+";"
+                var otherQuery = "UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = " + lastReference + " WHERE guildID = " + server + ";"
                 database.query(otherQuery)
 		       
 		        lastMentionedDate = Date()
