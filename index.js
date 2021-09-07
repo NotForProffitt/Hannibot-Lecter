@@ -95,7 +95,7 @@ bot.on('message', async (msg) => {
 		        daysSince = 0
 		        lastReference = database.escape(msg.content)
 
-                var otherQuery = "UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = '"+lastReference+"' WHERE guildID = "+server+";"
+                var otherQuery = "UPDATE guild SET cannibalismCounter = cannibalismCounter + 1, daysSince = 0, lastTime = "+lastReference+" WHERE guildID = "+server+";"
                 database.query(otherQuery)
 		       
 		        lastMentionedDate = Date()
